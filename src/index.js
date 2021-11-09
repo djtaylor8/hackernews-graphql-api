@@ -13,13 +13,46 @@ const resolvers = {
     Query: {
         info: () => `This is the API of a Hackernews clone`,
         feed: () => links,
+        link: (_, {id}) => {
+            const link = links.find(link => link.id === id)
+            return link;
+        }
     },
-    Link: {
-        id: (parent) => parent.id,
-        description: (parent) => parent.description,
-        url: (parent) => parent.url,
-    }
+    Mutation: {
+        post: (parent,args) => {
+            let idCount = links.length 
 
+                const link = {
+                    id: `link-${idCount++}`,
+                    description: args.description,
+                    url: args.url,
+                }
+                links.push(link)
+                return link
+        },
+        updateLink: (parent,args) => {
+            const link = links.find(link => link.id === args.id);
+            if (!link) {
+                throw new Error(`Couldn't find link with id ${args.id}`);
+            }
+            if (args.description !== undefined) {
+                link.description = args.description;
+            }
+            if (args.url !== undefined) {
+                link.url = args.url;
+            }
+            return link;
+        },
+        deleteLink: (parent,args) => {
+            const link = links.find(link => link.id === args.id);
+            if (!link) {
+                throw new Error(`Couldn't find link with id ${args.id}`);
+            }
+            const linkIdx = links.findIndex(link => link.id === args.id);
+            links.splice(linkIdx, 1);
+            return link;
+        }
+    },
 }
 
 //3
