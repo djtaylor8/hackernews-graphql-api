@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^3.4.2",
-    "apollo-server": "^3.5.0",
+    "apollo-server": "^2.25.3",
     "bcryptjs": "^2.4.3",
     "graphql": "^15.7.2",
     "jsonwebtoken": "^8.5.1"
