@@ -52,9 +52,34 @@ async function signup(parent, args, context, info) {
       }
     })
   }
+
+  async function vote(parent, args, context, info) {
+    const userId = context.userId;
+
+    const vote = await context.prisma.vote.findUnique({
+      where: {
+        linkId_userId: {
+          linkId: Number(args.linkId),
+          userId: userId
+        }
+      }
+    }) 
+    if (Boolean(vote)) {
+      throw new Error(`Already voted for link: ${args.linkId}`)
+    }
+
+    const newVote = context.prisma.vote.create({
+      data: {
+        user: { connect: { id: userId } },
+        link: { connect: { id: Number(args.linkId) } },
+      }
+    })
+    return newVote;
+  }
   
   module.exports = {
     signup,
     login,
     post,
+    vote,
   }
